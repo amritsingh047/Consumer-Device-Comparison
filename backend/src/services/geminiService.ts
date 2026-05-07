@@ -9,7 +9,7 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
   if (!apiKey) return [];
   
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash' });
 
   const context = `
     I have a database of electronics. Featured devices:
@@ -75,7 +75,7 @@ export async function searchDeviceWithGemini(query: string): Promise<any[]> {
   
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash' });
     const context = `
       You are an expert consumer electronics database. The user searched for: "${query}".
       Find the closest matching consumer electronic device (smartphone, laptop, tablet, etc.) or devices.
@@ -114,7 +114,7 @@ export async function getDeviceWithGemini(id: string): Promise<any> {
   
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash' });
     const context = `
       You are an expert consumer electronics database. The user requested details for the device with ID: "${id}".
       Generate a comprehensive device specification object for this device.

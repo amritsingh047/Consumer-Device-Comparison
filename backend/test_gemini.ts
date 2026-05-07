@@ -1,13 +1,11 @@
-import { findBestDevices } from './src/services/geminiService';
+import { searchDeviceWithGemini } from './src/services/geminiService';
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function test() {
-  console.log("Starting test...");
-  try {
-    const result = await findBestDevices(50000, 'gaming');
-    console.log("Result:", result);
-  } catch (e) {
-    console.log("Error:", e);
-  }
+  console.log("Searching with Gemini...");
+  const res = await searchDeviceWithGemini("iphone 16");
+  console.log("Result:", JSON.stringify(res, null, 2));
 }
 
-test();
+test().catch(console.error);
