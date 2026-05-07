@@ -68,7 +68,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   
   if (!device) {
     console.log(`Device ID "${req.params.id}" not found locally. Fetching from Gemini AI...`);
-    const aiDevice = await getDeviceWithGemini(req.params.id);
+    const aiDevice = await getDeviceWithGemini(req.params.id as string);
     if (aiDevice) {
       device = aiDevice;
     } else {
