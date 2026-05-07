@@ -9,7 +9,7 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
   if (!apiKey) return [];
   
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
   const context = `
     I have a database of electronics. Featured devices:
@@ -50,7 +50,21 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
       return [];
     }
   } catch (error) {
-    console.error('Gemini Error:', error);
-    return [];
+    console.error('Gemini Error or 404, falling back to local search...', error);
+    // Fallback logic
+    const matched = mockDevices.filter(d => {
+      const price = d.prices[0]?.priceInr || 999999;
+      return price <= budget;
+    });
+    
+    // Sort by priority if possible, otherwise by price descending to get the best in budget
+    matched.sort((a, b) => (b.prices[0]?.priceInr || 0) - (a.prices[0]?.priceInr || 0));
+    
+    return matched.slice(0, 3).map((d, index) => ({
+      name: d.name,
+      reason: `Based on your budget of ₹${budget}, this is an excellent choice from our database.`,
+      score: 9 - index,
+      matchingId: d.id
+    }));
   }
 }
