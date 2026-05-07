@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { SearchBar } from '../components/SearchBar/SearchBar';
 
@@ -11,18 +11,13 @@ const TRENDING_PAIRS = [
   { a: 'google-pixel-8-pro', b: 'oneplus-12', label: 'Pixel 8 Pro vs OnePlus 12' },
 ];
 
-const CATEGORIES = [
-  { label: 'All', value: '' }, { label: '📱 Mobiles', value: 'MOBILE' },
-  { label: '💻 Laptops', value: 'LAPTOP' }, { label: '🎧 Audio', value: 'AUDIO' },
-  { label: '📟 Tablets', value: 'TABLET' }, { label: '⌚ Watches', value: 'WATCH' },
-];
+
 
 import { FallingPattern } from '../components/FallingPattern/FallingPattern';
 
 export const Home: React.FC = () => {
-  const [params, setParams] = useSearchParams();
+  const [, setParams] = useSearchParams();
   const navigate = useNavigate();
-  const activeCat = params.get('category') || '';
 
   return (
     <div className="home">
