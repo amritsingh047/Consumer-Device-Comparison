@@ -1,0 +1,44 @@
+.compare { padding: 40px 0 80px; }
+
+.compare-empty {
+  min-height: 70vh; display: flex; align-items: center; justify-content: center;
+}
+.compare-empty-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; max-width: 600px;
+}
+.compare-empty-icon {
+  font-size: 4rem; width: 100px; height: 100px;
+  background: var(--gradient-card); border: 1px solid var(--border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.compare-empty-inner h1 { font-size: 1.8rem; }
+.compare-empty-inner p { color: var(--text-secondary); line-height: 1.6; }
+
+.compare-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  margin-bottom: 28px; flex-wrap: wrap;
+}
+.compare-title { font-size: 1.8rem; font-weight: 800; }
+.compare-sub { color: var(--text-secondary); font-size: 0.875rem; margin-top: 4px; }
+
+.compare-controls { display: flex; gap: 10px; align-items: center; }
+.compare-diff-btn.active { background: rgba(245,158,11,0.15); border-color: var(--warning); color: var(--warning); }
+
+.compare-chips { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-start; }
+
+.compare-chip {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  border-radius: var(--radius-md) !important;
+}
+.compare-chip img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+.compare-chip-name { font-size: 0.82rem; font-weight: 600; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.compare-chip-remove {
+  background: none; border: none; color: var(--text-muted); font-size: 0.75rem; padding: 2px 4px;
+  border-radius: 4px; flex-shrink: 0;
+}
+.compare-chip-remove:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+
+.compare-add-wrap { display: flex; flex-direction: column; gap: 6px; max-width: 360px; }
+.compare-add-hint { font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+
+.compare-need-more { padding: 40px; text-align: center; color: var(--text-secondary); }

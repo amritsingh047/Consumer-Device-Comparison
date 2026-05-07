@@ -1,0 +1,43 @@
+.ai-finder { padding: 60px 0 100px; }
+
+.ai-finder-hero { text-align: center; margin-bottom: 48px; }
+.ai-finder-hero h1 { font-size: 2.8rem; font-weight: 800; margin: 16px 0; }
+.ai-finder-hero p { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+.ai-finder-form {
+  max-width: 600px; margin: 0 auto 64px; padding: 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 12px; }
+.form-group label { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.budget-value { font-size: 2rem; font-weight: 800; color: var(--accent); text-align: center; font-family: var(--font-heading); }
+
+.priority-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.priority-btn {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  color: var(--text-secondary); padding: 14px; border-radius: var(--radius-md);
+  font-weight: 600; cursor: pointer; transition: var(--transition);
+}
+.priority-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.priority-btn.active { background: rgba(59,130,246,0.1); border-color: var(--accent); color: var(--accent); }
+
+.find-btn { padding: 18px; font-size: 1.1rem; justify-content: center; }
+
+.ai-finder-error {
+  background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px;
+  border-radius: var(--radius-md); text-align: center; font-size: 0.9rem; font-weight: 600;
+}
+
+.ai-results { margin-top: 64px; }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+
+.recommendation-card { padding: 32px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+.rec-score {
+  position: absolute; top: 20px; right: 20px;
+  font-size: 0.75rem; font-weight: 700; color: var(--warning);
+  background: rgba(245,158,11,0.1); padding: 4px 10px; border-radius: 100px;
+}
+.recommendation-card h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
+.recommendation-card p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; flex: 1; }

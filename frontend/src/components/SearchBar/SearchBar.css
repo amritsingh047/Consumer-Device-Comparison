@@ -1,0 +1,73 @@
+.searchbar-wrapper { position: relative; width: 100%; max-width: 720px; margin: 0 auto; }
+
+.searchbar-input-row {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+}
+.searchbar-input-row:focus-within,
+.searchbar-input-row.open {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  border-radius: 16px 16px 0 0;
+}
+
+.searchbar-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+.searchbar-spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+
+.searchbar-input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-primary); font-size: 1rem; font-family: var(--font-body);
+  caret-color: var(--accent);
+}
+.searchbar-input::placeholder { color: var(--text-muted); }
+
+.searchbar-clear {
+  background: none; border: none; color: var(--text-muted);
+  font-size: 0.85rem; padding: 2px 6px; border-radius: 4px;
+}
+.searchbar-clear:hover { color: var(--text-primary); background: var(--bg-card); }
+
+.searchbar-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: rgba(13,18,38,0.97);
+  border: 1.5px solid var(--accent);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  backdrop-filter: blur(20px);
+  list-style: none; z-index: 1000; overflow: hidden;
+  animation: fadeIn 0.15s ease;
+}
+
+.searchbar-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; cursor: pointer;
+  transition: background 0.15s;
+}
+.searchbar-item:hover { background: rgba(59,130,246,0.1); }
+.searchbar-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.searchbar-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+
+.searchbar-result-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.searchbar-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+.searchbar-brand { font-size: 0.75rem; color: var(--text-secondary); }
+
+.searchbar-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.searchbar-price { font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan); }
+
+.searchbar-empty {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: rgba(13,18,38,0.97); border: 1.5px solid var(--border); border-top: none;
+  border-radius: 0 0 16px 16px; padding: 20px; text-align: center;
+  color: var(--text-secondary); font-size: 0.875rem;
+}

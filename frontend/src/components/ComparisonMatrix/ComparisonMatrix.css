@@ -1,0 +1,40 @@
+.matrix-scroll-container {
+  width: 100%; overflow-x: auto; overflow-y: auto; max-height: 70vh;
+  border-radius: var(--radius-lg); border: 1px solid var(--border);
+  outline: none;
+}
+.matrix-scroll-container:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.matrix-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+
+thead { position: sticky; top: 0; z-index: 10; }
+
+.matrix-th-label, .matrix-th-device {
+  padding: 16px; background: rgba(13,18,38,0.98); backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--border); text-align: left;
+  font-family: var(--font-heading); font-size: 0.82rem; font-weight: 600;
+}
+.matrix-th-label {
+  position: sticky; left: 0; z-index: 11; min-width: 180px; max-width: 220px;
+  background: rgba(10,14,26,0.99);
+}
+.matrix-th-device { min-width: 200px; }
+
+.matrix-device-header { display: flex; align-items: center; gap: 10px; }
+.matrix-device-header img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
+.matrix-device-brand { display: block; font-size: 0.68rem; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
+.matrix-device-name { display: block; font-size: 0.88rem; font-weight: 700; color: var(--text-primary); }
+
+.matrix-row { transition: background 0.15s; }
+.matrix-row:hover > td { background: rgba(255,255,255,0.03); }
+
+.matrix-td-label {
+  padding: 12px 16px; position: sticky; left: 0; z-index: 1;
+  background: rgba(10,14,26,0.97); border-bottom: 1px solid var(--border);
+  min-width: 180px; max-width: 220px;
+}
+.matrix-td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+.matrix-spec-label { display: flex; flex-direction: column; gap: 2px; }
+.matrix-spec-section { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.matrix-cell-value { font-size: 0.83rem; color: var(--text-primary); line-height: 1.4; }

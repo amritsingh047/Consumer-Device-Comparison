@@ -1,0 +1,23 @@
+.price-table { display: flex; flex-direction: column; gap: 10px; }
+
+.price-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 20px; border-radius: var(--radius-md); flex-wrap: wrap;
+  background: var(--bg-card); border: 1px solid var(--border); transition: var(--transition);
+}
+.price-row:hover { border-color: var(--border-hover); }
+.price-row.best { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
+
+.price-row-vendor { display: flex; align-items: center; gap: 12px; }
+.price-vendor-logo { font-size: 1.4rem; }
+.price-vendor-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+
+.price-row-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.price-row-status { font-size: 0.75rem; font-weight: 500; }
+.in-stock { color: var(--success); }
+.out-stock { color: var(--text-muted); }
+.price-freshness { font-size: 0.72rem; color: var(--text-muted); }
+.price-amount { font-size: 1.3rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading); }
+
+.price-buy-btn { font-size: 0.82rem; padding: 8px 16px; text-decoration: none; display: inline-flex; }
+.price-table-empty { color: var(--text-muted); font-size: 0.875rem; }
