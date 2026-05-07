@@ -142,36 +142,6 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Browse */}
-      <section className="home-browse container">
-        <div className="home-browse-header">
-          <h2 className="home-section-title">Browse Devices</h2>
-          <div className="home-cat-filters" role="group" aria-label="Filter by category">
-            {CATEGORIES.map(c => (
-              <button
-                key={c.value}
-                className={`cat-filter-btn ${activeCat === c.value ? 'active' : ''}`}
-                onClick={() => setParams(c.value ? { category: c.value } : {})}
-              >{c.label}</button>
-            ))}
-          </div>
-        </div>
-        {loading ? (
-          <div className="home-skeleton-grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="skeleton home-skeleton-card" />
-            ))}
-          </div>
-        ) : (
-          <div className="home-devices-grid">
-            {devices.map((d: any, i: number) => (
-              <div key={d.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 40}ms` }}>
-                <ProductCard device={d} />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
     </div>
   );
 };

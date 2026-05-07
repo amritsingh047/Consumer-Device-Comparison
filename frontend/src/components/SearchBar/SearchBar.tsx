@@ -20,8 +20,13 @@ export const SearchBar: React.FC<{ autoFocus?: boolean }> = ({ autoFocus }) => {
       const data = await searchDevices(q);
       setResults(data);
       setOpen(true);
-    } catch { setResults([]); }
-    finally { setLoading(false); }
+    } catch {
+      // If the backend is offline or throws an error, show empty results but open the dropdown
+      setResults([]);
+      setOpen(true);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
