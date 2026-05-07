@@ -1,8 +1,6 @@
 import { Device } from '../types/device';
-import { laptopDevices } from './laptopDevices';
 
 export const mockDevices: Device[] = [
-  ...laptopDevices,
   {
     id: 'iphone-15-pro',
     name: 'iPhone 15 Pro',

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { SearchBar } from '../components/SearchBar/SearchBar';
-import { ProductCard } from '../components/ProductCard/ProductCard';
-import { getAllDevices } from '../api/client';
-import type { SearchResult } from '../types/device';
+
 import './Home.css';
 
 const TRENDING_PAIRS = [
@@ -25,46 +23,6 @@ export const Home: React.FC = () => {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const activeCat = params.get('category') || '';
-  const [devices, setDevices] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    console.log('Fetching devices for category:', activeCat, 'params:', params.toString());
-    getAllDevices()
-      .then((data: SearchResult[]) => {
-        console.log('Received data:', data.length, 'devices');
-        let filtered = data;
-        if (activeCat) filtered = filtered.filter((d: SearchResult) => d.category === activeCat);
-        
-        const q = params.get('q')?.toLowerCase();
-        if (q) {
-          filtered = filtered.filter((d: SearchResult) => 
-            d.name.toLowerCase().includes(q) || 
-            d.brand.toLowerCase().includes(q) ||
-            d.category.toLowerCase().includes(q) ||
-            d.tags.some(t => t.toLowerCase().includes(q))
-          );
-        }
-
-        const maxPrice = params.get('maxPrice');
-        if (maxPrice) {
-          const limit = Number(maxPrice);
-          filtered = filtered.filter((d: SearchResult) => d.lowestInr !== undefined && d.lowestInr <= limit);
-        }
-
-        const priority = params.get('priority');
-        if (priority) {
-          filtered = filtered.filter((d: SearchResult) => d.tags.includes(priority));
-        }
-
-        console.log('Filtered data:', filtered.length, 'devices');
-        setDevices(filtered);
-        setLoading(false);
-      }).catch((err) => {
-        console.error('Fetch error:', err);
-        setLoading(false);
-      });
-  }, [activeCat, params]);
 
   return (
     <div className="home">
