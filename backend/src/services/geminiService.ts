@@ -69,33 +69,29 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
   }
 }
 
-export async function searchDeviceWithGemini(query: string) {
+export async function searchDeviceWithGemini(query: string): Promise<any[]> {
   const apiKey = process.env.GEMINI_API_KEY || '';
   if (!apiKey) return [];
-
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-  const context = `
-    The user is searching for an electronic device using the query: "${query}".
-    This could be a device name, a brand, or an e-commerce URL.
-    
-    Task: Identify the main electronic device(s) the user is looking for and return a JSON array containing up to 3 matching devices.
-    
-    Each object in the array MUST have exactly these keys:
-    - id: A URL-friendly slugified version of the device name (e.g., "iphone-15-pro")
-    - name: Full name of the device
-    - brand: Brand name
-    - category: Must be one of "MOBILE", "LAPTOP", "TABLET", "AUDIO", or "WATCH"
-    - thumbnailUrl: A URL for the device image. Use this exact format: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&q=80" (or similar unsplash electronics placeholders)
-    - releaseDate: Estimated release date (YYYY-MM-DD)
-    - lowestInr: Estimated price in Indian Rupees (number, e.g., 80000)
-    - tags: Array of 2-3 descriptive tags (e.g., ["flagship", "camera"])
-
-    IMPORTANT: Respond ONLY with the JSON array. Do not include markdown blocks or any other text.
-  `;
-
+  
   try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const context = `
+      You are an expert consumer electronics database. The user searched for: "${query}".
+      Find the closest matching consumer electronic device (smartphone, laptop, tablet, etc.) or devices.
+      Return ONLY a JSON array containing up to 3 objects with these exact keys:
+      - id (a url-friendly slug like "brand-model")
+      - name (full product name)
+      - brand
+      - category (must be "MOBILE", "LAPTOP", "TABLET", "AUDIO", or "WATCH")
+      - thumbnailUrl (use a generic placeholder like "/placeholder.png")
+      - releaseDate (YYYY-MM-DD or close to it)
+      - lowestInr (an estimated price in Indian Rupees as a number)
+      - tags (array of 3 strings like ["premium", "camera", "ai"])
+      
+      Respond ONLY with the raw JSON array. Do not include markdown formatting or backticks.
+    `;
+
     const result = await model.generateContent(context);
     const response = await result.response;
     let text = response.text();
@@ -106,8 +102,51 @@ export async function searchDeviceWithGemini(query: string) {
       return JSON.parse(jsonMatch[0]);
     }
     return JSON.parse(text);
-  } catch (error) {
-    console.error('Gemini Search Error:', error);
+  } catch (err) {
+    console.error('Failed to fetch device from Gemini:', err);
     return [];
+  }
+}
+
+export async function getDeviceWithGemini(id: string): Promise<any> {
+  const apiKey = process.env.GEMINI_API_KEY || '';
+  if (!apiKey) return null;
+  
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const context = `
+      You are an expert consumer electronics database. The user requested details for the device with ID: "${id}".
+      Generate a comprehensive device specification object for this device.
+      Return ONLY a JSON object with these exact keys and structure:
+      - id ("${id}")
+      - name (full product name)
+      - brand
+      - category ("MOBILE", "LAPTOP", "TABLET", "AUDIO", or "WATCH")
+      - releaseDate (YYYY-MM-DD or close to it)
+      - tagline (a catchy marketing phrase)
+      - imageUrl (use a generic placeholder like "/placeholder.png")
+      - thumbnailUrl (use a generic placeholder like "/placeholder.png")
+      - specs (an object with keys like display, performance, battery, camera, connectivity, design, software)
+      - prices (array of 1 object with { vendor: "AMAZON", priceInr: <estimated_price>, affiliateUrl: "#", inStock: true })
+      - videos (empty array [])
+      - tags (array of 3 to 5 strings)
+      
+      Respond ONLY with the raw JSON object. Do not include markdown formatting or backticks.
+    `;
+
+    const result = await model.generateContent(context);
+    const response = await result.response;
+    let text = response.text();
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    return JSON.parse(text);
+  } catch (err) {
+    console.error('Failed to fetch device details from Gemini:', err);
+    return null;
   }
 }
