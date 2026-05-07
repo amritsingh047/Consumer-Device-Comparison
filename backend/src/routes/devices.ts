@@ -3,7 +3,6 @@ import { mockDevices } from '../data/mockDevices';
 import { extractProductIdentifier } from '../services/urlExtractionService';
 import { Device, SearchResult } from '../types/device';
 import { getYouTubeReviews } from '../services/youtubeService';
-import { searchGlobalDevices } from '../services/geminiService';
 
 const router = Router();
 
@@ -16,6 +15,8 @@ router.get('/:id/reviews', async (req: Request, res: Response) => {
   res.json(reviews);
 });
 
+import { findBestDevices, searchDeviceWithGemini } from '../services/geminiService';
+
 // Search endpoint
 router.get('/search', async (req: Request, res: Response) => {
   let query = (req.query.q as string || '').toLowerCase().trim();
@@ -24,14 +25,12 @@ router.get('/search', async (req: Request, res: Response) => {
   if (!query) return res.json([]);
 
   const extracted = extractProductIdentifier(query);
-  let results: SearchResult[];
+  let results: SearchResult[] = [];
 
   console.log(`Search query: "${query}", Extracted:`, extracted);
 
-  if (extracted.retailer !== 'UNSUPPORTED' && extracted.productId) {
-    // URL-based lookup returns all devices (demo purposes)
-    results = mockDevices.slice(0, 5).map(toSearchResult);
-  } else {
+  if (extracted.retailer === 'UNSUPPORTED' || !extracted.productId) {
+    // Normal search locally
     results = mockDevices
       .filter(d => {
         try {
@@ -49,11 +48,39 @@ router.get('/search', async (req: Request, res: Response) => {
       .slice(0, 24)
       .map(toSearchResult);
   }
-  
-  if (results.length === 0 && query.length > 3) {
-    console.log(`No local results for "${query}", trying AI global search...`);
-    const aiResults = await searchGlobalDevices(query);
-    results = aiResults;
+
+  // If no local results found, or if it's a direct URL query from Amazon/BestBuy, use Gemini to fetch from web
+  if (results.length === 0 || extracted.retailer !== 'UNSUPPORTED') {
+    console.log(`No local results or URL provided. Asking Gemini for "${query}"...`);
+    const geminiResults = await searchDeviceWithGemini(query);
+    if (geminiResults && geminiResults.length > 0) {
+      results = geminiResults;
+      
+      // Optionally add them to mockDevices cache so /devices/:id works later
+      // We need to map SearchResult -> Device to push to mockDevices, 
+      // but for now the user just wants the search bar to show results.
+      // The search bar navigates to /device/:id, so we MUST cache it as a full device!
+      geminiResults.forEach((r: SearchResult) => {
+        if (!mockDevices.find(d => d.id === r.id)) {
+          mockDevices.push({
+            id: r.id,
+            name: r.name,
+            brand: r.brand,
+            category: r.category,
+            releaseDate: r.releaseDate || '2025-01-01',
+            tagline: 'AI Discovered Device',
+            imageUrl: r.thumbnailUrl,
+            thumbnailUrl: r.thumbnailUrl,
+            specs: {
+              performance: { cpu: 'AI Discovered', ram: 'Unknown', storage: 'Unknown' }
+            },
+            prices: r.lowestInr ? [{ id: 'p-' + r.id, deviceId: r.id, vendor: 'AMAZON', priceInr: r.lowestInr, affiliateUrl: '#', scrapedAt: new Date().toISOString(), inStock: true }] : [],
+            videos: [],
+            tags: r.tags || []
+          });
+        }
+      });
+    }
   }
   
   console.log(`Found ${results.length} results`);
