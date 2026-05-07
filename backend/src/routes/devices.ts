@@ -3,6 +3,7 @@ import { mockDevices } from '../data/mockDevices';
 import { extractProductIdentifier } from '../services/urlExtractionService';
 import { Device, SearchResult } from '../types/device';
 import { getYouTubeReviews } from '../services/youtubeService';
+import { searchGlobalDevices } from '../services/geminiService';
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.get('/:id/reviews', async (req: Request, res: Response) => {
 });
 
 // Search endpoint
-router.get('/search', (req: Request, res: Response) => {
+router.get('/search', async (req: Request, res: Response) => {
   let query = (req.query.q as string || '').toLowerCase().trim();
   // Strip quotes if present
   query = query.replace(/^["']|["']$/g, '');
@@ -47,6 +48,12 @@ router.get('/search', (req: Request, res: Response) => {
       })
       .slice(0, 24)
       .map(toSearchResult);
+  }
+  
+  if (results.length === 0 && query.length > 3) {
+    console.log(`No local results for "${query}", trying AI global search...`);
+    const aiResults = await searchGlobalDevices(query);
+    results = aiResults;
   }
   
   console.log(`Found ${results.length} results`);

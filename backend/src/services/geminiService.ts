@@ -9,7 +9,7 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
   if (!apiKey) return [];
   
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const context = `
     I have a database of electronics. Featured devices:
@@ -66,5 +66,45 @@ export async function findBestDevices(budget: number, priority: 'gaming' | 'came
       score: 9 - index,
       matchingId: d.id
     }));
+  }
+}
+
+export async function searchGlobalDevices(query: string) {
+  const apiKey = process.env.GEMINI_API_KEY || '';
+  if (!apiKey) return [];
+  
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+  const context = `
+    You are a product expert. A user is searching for "${query}".
+    We don't have this device in our local database.
+    
+    Task:
+    1. Identify the specific device the user is searching for.
+    2. Provide accurate current specifications and an estimated price in Indian Rupees (INR).
+    3. Return ONLY a JSON object representing the device with these keys: 
+       id (slugified name), name, brand, category (MOBILE/LAPTOP/AUDIO/WATCH/TABLET), 
+       releaseDate, tagline, thumbnailUrl (use a high quality placeholder from unsplash if unknown), 
+       lowestInr, tags (array).
+    
+    IMPORTANT: Respond ONLY with the JSON object.
+  `;
+
+  try {
+    const result = await model.generateContent(context);
+    const response = await result.response;
+    let text = response.text();
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const deviceData = JSON.parse(jsonMatch[jsonMatch.index === undefined ? 0 : jsonMatch.index]);
+      return [deviceData];
+    }
+    return [];
+  } catch (error) {
+    console.error('Global Search Gemini Error:', error);
+    return [];
   }
 }
